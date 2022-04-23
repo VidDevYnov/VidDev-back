@@ -34,6 +34,8 @@
         "symfony/yaml": "5.4.*"
     },
     "require-dev": {
+        "symfony/stopwatch": "5.4.*",
+        "symfony/web-profiler-bundle": "5.4.*"
     },
     "config": {
         "allow-plugins": {

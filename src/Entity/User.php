@@ -34,14 +34,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'controller' => MeController::class,
             'read' => false,
             'openapi_context' => [
-                'security' => ['cookieAuth' => ['']]
+                'security' => [['bearerAuth' => []]]
             ]
          ]
     ],
     normalizationContext: ['groups' => ['read:User']]
 
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface 
 {
     /**
      * @ORM\Id
