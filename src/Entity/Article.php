@@ -7,7 +7,9 @@ use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * paginationItemsPerPage= 50
+ * )
  * @ORM\Entity(repositoryClass=Article::class)
  */
 class Article
