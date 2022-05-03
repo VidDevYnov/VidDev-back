@@ -14,53 +14,42 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 #[ApiResource(
-    security : 'is_granted("ROLE_USER")',
     collectionOperations: [
+        "get" => [
+            "normalization_context" => ["groups" => ["user_read"]]
+        ]
     ],
-    itemOperations:[
+    itemOperations: [
         'get' => [
-            'controller' => NotFoundAction::class,
-            'openapi_context' => ['summary' => 'hidden'],
-            'read' => false,
-            'output' => false
+            'normalization_context' => ["groups" => ["user_details_read"]]
         ],
-        'me' => [
-            'pagination_enabled' => false,
-            'path' => '/me',
-            'method' => 'get',
-            'controller' => MeController::class,
-            'read' => false,
-            'openapi_context' => [
-                'security' => [['bearerAuth' => []]]
-            ]
-         ]
     ],
     normalizationContext: ['groups' => ['read:User']]
 
-)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface 
+)] 
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:User'])]
+    #[Groups(["user_read", "user_details_read"])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups(['read:User'])]
+    #[Groups(["user_details_read"])]
     private $email;
 
     /**
      * @ORM\Column(type="json")
      */
-    #[Groups(['read:User'])]
     private $roles = [];
 
     /**
@@ -72,33 +61,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['read:User'])]
+    #[Groups(["user_read", "user_details_read"])]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['read:User'])]
+    #[Groups(["user_read", "user_details_read"])]
     private $lastName;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+    #[Groups(["user_details_read"])]
     private $bio;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Groups(["user_read", "user_details_read"])]
     private $profilePicture;
 
     /**
      * @ORM\Column(type="integer")
      */
+    #[Groups(["user_details_read"])]
     private $point;
 
     /**
      * @ORM\Column(type="float")
      */
+    #[Groups(["user_details_read"])]
     private $solde;
 
 
