@@ -4,63 +4,46 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OrderRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource()
- * @ORM\Entity(repositoryClass=OrderRepository::class)
- * @ORM\Table(name="`order`")
- */
+#[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\Table(name: '`order`')]
+#[ApiResource]
 class Order
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $totalPrice;
+    #[ORM\Column(type: 'float')]
+    private $price;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')]
     private $commission;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer')]
     private $point;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Address::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Address::class)]
     private $address;
 
-    public function __construct()
-    {
-        $this->idArticle = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private $user;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTotalPrice(): ?float
+    public function getPrice(): ?float
     {
-        return $this->totalPrice;
+        return $this->price;
     }
 
-    public function setTotalPrice(float $totalPrice): self
+    public function setPrice(float $price): self
     {
-        $this->totalPrice = $totalPrice;
+        $this->price = $price;
 
         return $this;
     }
@@ -82,7 +65,7 @@ class Order
         return $this->point;
     }
 
-    public function setPoint(?int $point): self
+    public function setPoint(int $point): self
     {
         $this->point = $point;
 
@@ -97,6 +80,18 @@ class Order
     public function setAddress(?Address $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getUser(): ?user
+    {
+        return $this->user;
+    }
+
+    public function setUser(?user $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

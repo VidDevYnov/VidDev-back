@@ -6,83 +6,50 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource()
- * @ORM\Entity(repositoryClass=Article::class)
- */
+#[ORM\Entity(repositoryClass: ArticleRepository::class)]
+#[ApiResource]
 class Article
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $brand;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ArticleSize::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $ArticleSize;
+    #[ORM\ManyToOne(targetEntity: ArticleSize::class)]
+    private $articleSize;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')]
     private $price;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ArticleState::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $ArticleState;
+    #[ORM\ManyToOne(targetEntity: ArticleState::class)]
+    private $articleState;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $color;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ArticleType::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $ArticleType;
+    #[ORM\ManyToOne(targetEntity: ArticleType::class)]
+    private $articleType;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ArticleMaterial::class)
-     */
-    private $ArticleMaterial;
+    #[ORM\ManyToOne(targetEntity: ArticleMaterial::class)]
+    private $articleMaterial;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ArticleCategory::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $ArticleCategory;
+    #[ORM\ManyToOne(targetEntity: ArticleCategory::class)]
+    private $articleCategory;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $User;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="Article")
-     */
-    private $Order;
+    #[ORM\ManyToOne(targetEntity: Order::class)]
+    private $orderArticle;
 
     public function getId(): ?int
     {
@@ -115,12 +82,12 @@ class Article
 
     public function getArticleSize(): ?ArticleSize
     {
-        return $this->ArticleSize;
+        return $this->articleSize;
     }
 
-    public function setArticleSize(?ArticleSize $ArticleSize): self
+    public function setArticleSize(?ArticleSize $articleSize): self
     {
-        $this->ArticleSize = $ArticleSize;
+        $this->articleSize = $articleSize;
 
         return $this;
     }
@@ -151,12 +118,12 @@ class Article
 
     public function getArticleState(): ?ArticleState
     {
-        return $this->ArticleState;
+        return $this->articleState;
     }
 
-    public function setArticleState(?ArticleState $ArticleState): self
+    public function setArticleState(?ArticleState $articleState): self
     {
-        $this->ArticleState = $ArticleState;
+        $this->articleState = $articleState;
 
         return $this;
     }
@@ -175,60 +142,60 @@ class Article
 
     public function getArticleType(): ?ArticleType
     {
-        return $this->ArticleType;
+        return $this->articleType;
     }
 
-    public function setArticleType(?ArticleType $ArticleType): self
+    public function setArticleType(?ArticleType $articleType): self
     {
-        $this->ArticleType = $ArticleType;
+        $this->articleType = $articleType;
 
         return $this;
     }
 
     public function getArticleMaterial(): ?ArticleMaterial
     {
-        return $this->ArticleMaterial;
+        return $this->articleMaterial;
     }
 
-    public function setArticleMaterial(?ArticleMaterial $ArticleMaterial): self
+    public function setArticleMaterial(?ArticleMaterial $articleMaterial): self
     {
-        $this->ArticleMaterial = $ArticleMaterial;
+        $this->articleMaterial = $articleMaterial;
 
         return $this;
     }
 
     public function getArticleCategory(): ?ArticleCategory
     {
-        return $this->ArticleCategory;
+        return $this->articleCategory;
     }
 
-    public function setArticleCategory(?ArticleCategory $ArticleCategory): self
+    public function setArticleCategory(?ArticleCategory $articleCategory): self
     {
-        $this->ArticleCategory = $ArticleCategory;
+        $this->articleCategory = $articleCategory;
 
         return $this;
     }
 
     public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function setUser(?User $User): self
+    public function setUser(?User $user): self
     {
-        $this->User = $User;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getOrder(): ?Order
+    public function getOrderArticle(): ?Order
     {
-        return $this->Order;
+        return $this->orderArticle;
     }
 
-    public function setOrder(?Order $Order): self
+    public function setOrderArticle(?Order $orderArticle): self
     {
-        $this->Order = $Order;
+        $this->orderArticle = $orderArticle;
 
         return $this;
     }

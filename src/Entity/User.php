@@ -2,103 +2,47 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Action\NotFoundAction;
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\MeController;
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource()
- * @ORM\Entity(repositoryClass=UserRepository::class)
- */
-#[ApiResource(
-    collectionOperations: [
-        "get" => [
-            "normalization_context" => ["groups" => ["user_read"]]
-        ]
-    ],
-    itemOperations: [
-        'get' => [
-            'normalization_context' => ["groups" => ["user_details_read"]]
-        ],
-    ],
-    normalizationContext: ['groups' => ['read:User']]
-
-)] 
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    #[Groups(["user_read", "user_details_read"])]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
-    #[Groups(["user_details_read"])]
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $roles = [];
 
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $password;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups(["user_read", "user_details_read"])]
+    #[ORM\Column(type: 'string', length: 255)]
     private $firstName;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups(["user_read", "user_details_read"])]
+    #[ORM\Column(type: 'string', length: 255)]
     private $lastName;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    #[Groups(["user_details_read"])]
-    private $bio;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $profilPicture;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    #[Groups(["user_read", "user_details_read"])]
-    private $profilePicture;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    #[Groups(["user_details_read"])]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $point;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    #[Groups(["user_details_read"])]
+    #[ORM\Column(type: 'float', nullable: true)]
     private $solde;
 
-
-    public function __construct()
-    {
-        $this->address = new ArrayCollection();
-    }
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $bio;
 
     public function getId(): ?int
     {
@@ -213,26 +157,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getBio(): ?string
+    public function getProfilPicture(): ?string
     {
-        return $this->bio;
+        return $this->profilPicture;
     }
 
-    public function setBio(?string $bio): self
+    public function setProfilPicture(?string $profilPicture): self
     {
-        $this->bio = $bio;
-
-        return $this;
-    }
-
-    public function getProfilePicture(): ?string
-    {
-        return $this->profilePicture;
-    }
-
-    public function setProfilePicture(?string $profilePicture): self
-    {
-        $this->profilePicture = $profilePicture;
+        $this->profilPicture = $profilPicture;
 
         return $this;
     }
@@ -242,7 +174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->point;
     }
 
-    public function setPoint(int $point): self
+    public function setPoint(?int $point): self
     {
         $this->point = $point;
 
@@ -254,9 +186,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->solde;
     }
 
-    public function setSolde(float $solde): self
+    public function setSolde(?float $solde): self
     {
         $this->solde = $solde;
+
+        return $this;
+    }
+
+    public function getBio(): ?string
+    {
+        return $this->bio;
+    }
+
+    public function setBio(?string $bio): self
+    {
+        $this->bio = $bio;
 
         return $this;
     }

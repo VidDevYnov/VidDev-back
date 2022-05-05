@@ -6,29 +6,20 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource()
- * @ORM\Entity(repositoryClass=ImageRepository::class)
- */
+#[ORM\Entity(repositoryClass: ImageRepository::class)]
+#[ApiResource]
 class Image
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Article::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Article;
+    #[ORM\ManyToOne(targetEntity: Article::class)]
+    private $article;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $Path;
+    #[ORM\Column(type: 'string', length: 255)]
+    private $path;
 
     public function getId(): ?int
     {
@@ -37,24 +28,24 @@ class Image
 
     public function getArticle(): ?Article
     {
-        return $this->Article;
+        return $this->article;
     }
 
-    public function setArticle(?Article $Article): self
+    public function setArticle(?Article $article): self
     {
-        $this->Article = $Article;
+        $this->article = $article;
 
         return $this;
     }
 
     public function getPath(): ?string
     {
-        return $this->Path;
+        return $this->path;
     }
 
-    public function setPath(string $Path): self
+    public function setPath(string $path): self
     {
-        $this->Path = $Path;
+        $this->path = $path;
 
         return $this;
     }
