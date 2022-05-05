@@ -4,7 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ApiResource]
@@ -13,19 +16,29 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["user_details_read"])]
+
     private $id;
+
+    #[Groups(["user_details_read"])]
 
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[Groups(["user_details_read"])]
+
     #[ORM\Column(type: 'string', length: 255)]
     private $brand;
+
+    #[Groups(["user_details_read"])]
 
     #[ORM\ManyToOne(targetEntity: ArticleSize::class)]
     private $articleSize;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
+
+    #[Groups(["user_details_read"])]
 
     #[ORM\Column(type: 'float')]
     private $price;
@@ -45,11 +58,19 @@ class Article
     #[ORM\ManyToOne(targetEntity: ArticleCategory::class)]
     private $articleCategory;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    private $user;
-
     #[ORM\ManyToOne(targetEntity: Order::class)]
     private $orderArticle;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
+    private $user;
+
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
+    private $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -176,6 +197,18 @@ class Article
         return $this;
     }
 
+    public function getOrderArticle(): ?Order
+    {
+        return $this->orderArticle;
+    }
+
+    public function setOrderArticle(?Order $orderArticle): self
+    {
+        $this->orderArticle = $orderArticle;
+
+        return $this;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -188,14 +221,32 @@ class Article
         return $this;
     }
 
-    public function getOrderArticle(): ?Order
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
     {
-        return $this->orderArticle;
+        return $this->images;
     }
 
-    public function setOrderArticle(?Order $orderArticle): self
+    public function addImage(Image $image): self
     {
-        $this->orderArticle = $orderArticle;
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getArticle() === $this) {
+                $image->setArticle(null);
+            }
+        }
 
         return $this;
     }

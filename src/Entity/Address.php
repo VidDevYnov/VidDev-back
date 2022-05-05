@@ -30,7 +30,7 @@ class Address
     #[ORM\Column(type: 'string', length: 255)]
     private $address;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'addresses')]
     private $user;
 
     public function getId(): ?int
