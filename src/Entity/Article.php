@@ -5,29 +5,40 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
-#[ApiResource]
+#[ApiResource(
+        collectionOperations: ['get' => ['normalization_context' => ['groups' => 'article:list']]],
+        itemOperations: ['get' => ['normalization_context' => ['groups' => 'article:item']]],
+        paginationEnabled: false,
+    )]
+
 class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['article:list', 'article:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['article:list', 'article:item'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['article:list', 'article:item'])]
     private $brand;
 
     #[ORM\ManyToOne(targetEntity: ArticleSize::class)]
+    #[Groups(['article:list', 'article:item'])]
     private $articleSize;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['article:list', 'article:item'])]
     private $price;
 
     #[ORM\ManyToOne(targetEntity: ArticleState::class)]
@@ -46,6 +57,7 @@ class Article
     private $articleCategory;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
+    #[Groups(['article:list', 'article:item'])]
     private $user;
 
     #[ORM\ManyToOne(targetEntity: Order::class)]
