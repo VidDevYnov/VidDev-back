@@ -15,25 +15,27 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     collectionOperations: [
         "get" => [
-            "normalization_context" => ['groups' => ['user_read']]
+            "normalization_context" => ['groups' => ['user_read', 'article:list']]
         ],
         "post"
     ],
     itemOperations: [
         "get" => [
-            "normalization_context" => ["groups" => ['user_details_read']]
+            "normalization_context" => ["groups" => ['user_details_read', 'article:item']]
         ],
         "put",
         "patch",
         "delete"
+    paginationEnabled: false,
     ]
+
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["user_read", "user_details_read"])]
+    #[Groups(["user_read", "user_details_read",'article:list', 'article:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
@@ -47,15 +49,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user_read", "user_details_read"])]
+    #[Groups(["user_read", "user_details_read",'article:list', 'article:item'])]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user_read", "user_details_read"])]
+    #[Groups(["user_read", "user_details_read", 'article:list', 'article:item'])]
     private $lastName;
-
+  
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["user_read", "user_details_read"])]
+    #[Groups(['article:list', 'article:item'])]
     private $profilPicture;
 
     #[ORM\Column(type: 'integer', nullable: true)]

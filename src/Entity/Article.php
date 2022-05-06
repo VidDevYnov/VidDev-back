@@ -10,29 +10,37 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
-#[ApiResource]
+#[ApiResource(
+        collectionOperations: ['get' => ['normalization_context' => ['groups' => 'article:list']]],
+        itemOperations: ['get' => ['normalization_context' => ['groups' => 'article:item']]],
+        paginationEnabled: false,
+    )]
+
 class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["user_details_read"])]
+    #[Groups(['article:list', 'article:item' ,"user_details_read"])]
 
     private $id;
 
     #[Groups(["user_details_read"])]
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['article:list', 'article:item'])]
     private $name;
 
     #[Groups(["user_details_read"])]
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['article:list', 'article:item'])]
     private $brand;
 
     #[Groups(["user_details_read"])]
 
     #[ORM\ManyToOne(targetEntity: ArticleSize::class)]
+    #[Groups(['article:list', 'article:item'])]
     private $articleSize;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -41,6 +49,7 @@ class Article
     #[Groups(["user_details_read"])]
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['article:list', 'article:item'])]
     private $price;
 
     #[ORM\ManyToOne(targetEntity: ArticleState::class)]
