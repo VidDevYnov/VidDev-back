@@ -15,31 +15,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     collectionOperations: [
         "get" => [
-            "normalization_context" => ['groups' => ['user_read', 'article:list']]
+            "normalization_context" => ['groups' => ['user:list']]
         ],
         "post"
     ],
     itemOperations: [
         "get" => [
-            "normalization_context" => ["groups" => ['user_details_read', 'article:item']]
+            "normalization_context" => ["groups" => ['user:item']]
         ],
         "put",
         "patch",
         "delete"
-    paginationEnabled: false,
-    ]
-
+    ],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["user_read", "user_details_read",'article:list', 'article:item'])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user_details_read"])]
+    #[Groups(["user:item"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -49,13 +47,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user_read", "user_details_read",'article:list', 'article:item'])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item'])]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user_read", "user_details_read", 'article:list', 'article:item'])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item'])]
     private $lastName;
-  
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['article:list', 'article:item'])]
     private $profilPicture;
@@ -67,10 +65,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $solde;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(["user_details_read"])]
+    #[Groups(["user:item"])]
     private $bio;
 
-    #[Groups(["user_details_read"])]
+    #[Groups(["user:item"])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Article::class)]
     private $articles;
 

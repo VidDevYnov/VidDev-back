@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ArticleSizeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleSizeRepository::class)]
 #[ApiResource]
@@ -15,6 +16,7 @@ class ArticleSize
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Groups(['article:list', 'article:item'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $worded;
 

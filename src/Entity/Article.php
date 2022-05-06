@@ -11,69 +11,80 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ApiResource(
-        collectionOperations: ['get' => ['normalization_context' => ['groups' => 'article:list']]],
-        itemOperations: ['get' => ['normalization_context' => ['groups' => 'article:item']]],
-        paginationEnabled: false,
-    )]
-
+    collectionOperations: [
+        "get" => [
+            "normalization_context" => ['groups' => ['article:list']]
+        ],
+        "post"
+    ],
+    itemOperations: [
+        "get" => [
+            "normalization_context" => ["groups" => ['article:item']]
+        ],
+        "put",
+        "patch",
+        "delete"
+    ],
+)]
 class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['article:list', 'article:item' ,"user_details_read"])]
+    #[Groups(['article:list', 'article:item', "user:item"])]
 
     private $id;
 
-    #[Groups(["user_details_read"])]
-
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['article:list', 'article:item'])]
+    #[Groups(['article:list', 'article:item', 'user:item'])]
     private $name;
 
-    #[Groups(["user_details_read"])]
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['article:list', 'article:item'])]
+    #[Groups(['article:list', 'article:item', 'user:item'])]
     private $brand;
 
-    #[Groups(["user_details_read"])]
-
     #[ORM\ManyToOne(targetEntity: ArticleSize::class)]
-    #[Groups(['article:list', 'article:item'])]
+    #[Groups(['article:list', 'article:item', 'user:item'])]
     private $articleSize;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['article:item'])]
     private $description;
 
-    #[Groups(["user_details_read"])]
-
     #[ORM\Column(type: 'float')]
-    #[Groups(['article:list', 'article:item'])]
+    #[Groups(['article:list', 'article:item', 'user:item'])]
     private $price;
 
     #[ORM\ManyToOne(targetEntity: ArticleState::class)]
+    #[Groups(['article:item'])]
     private $articleState;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['article:item'])]
     private $color;
 
     #[ORM\ManyToOne(targetEntity: ArticleType::class)]
+    #[Groups(['article:item'])]
     private $articleType;
 
     #[ORM\ManyToOne(targetEntity: ArticleMaterial::class)]
+    #[Groups(['article:item'])]
     private $articleMaterial;
 
     #[ORM\ManyToOne(targetEntity: ArticleCategory::class)]
+    #[Groups(['article:item'])]
     private $articleCategory;
 
     #[ORM\ManyToOne(targetEntity: Order::class)]
     private $orderArticle;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
+    #[Groups(['article:list', 'article:item'])]
     private $user;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
+    #[Groups(['article:list', 'article:item'])]
     private $images;
 
     public function __construct()

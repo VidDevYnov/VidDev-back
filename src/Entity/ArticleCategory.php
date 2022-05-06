@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ArticleCategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleCategoryRepository::class)]
 #[ApiResource]
@@ -16,6 +17,7 @@ class ArticleCategory
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['article:item'])]
     private $worded;
 
     public function getId(): ?int

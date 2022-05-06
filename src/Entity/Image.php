@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[ApiResource]
@@ -15,7 +16,7 @@ class Image
     #[ORM\Column(type: 'integer')]
     private $id;
 
-
+    #[Groups(['article:list', 'article:item'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $path;
 
