@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -17,7 +18,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         "get" => [
             "normalization_context" => ['groups' => ['user:list']]
         ],
-        "post"
+        "post" => [
+            "denormalization_context" => ['groups' => ['user:write']]
+        ],
     ],
     itemOperations: [
         "get" => [
@@ -37,21 +40,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user:item"])]
+    #[Groups(["user:item", "user:write"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(["user:write"])]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:list", "user:item", 'article:list', 'article:item'])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write"])]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:list", "user:item", 'article:list', 'article:item'])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write"])]
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -77,6 +81,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private $orders;
+
+    #[Groups(["user:write"])]
+    #[SerializedName("password")]
+    private $plainPassword;
 
     public function __construct()
     {
@@ -170,8 +178,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getFirstName(): ?string
@@ -221,6 +228,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
 
     public function getSolde(): ?float
     {
