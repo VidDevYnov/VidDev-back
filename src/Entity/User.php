@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\controller\ProfilController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,6 +22,14 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "post" => [
             "denormalization_context" => ['groups' => ['user:write']]
         ],
+        "profil" => [
+            'pagination_enabled' => false,
+            'method' => 'GET',
+            'path' => '/profil',
+            'controller' => ProfilController::class,
+            "normalization_context" => ['groups' => ['user:profil']]
+
+        ],
     ],
     itemOperations: [
         "get" => [
@@ -36,11 +45,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["user:list", "user:item", 'article:list', 'article:item'])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item', 'user:profil'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user:item", "user:write"])]
+    #[Groups(["user:item", "user:write", "user:profil"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -51,32 +60,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write"])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write", "user:profil"])]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write"])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write", "user:profil"])]
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['article:list', 'article:item'])]
+    #[Groups(['article:list', 'article:item', "user:profil"])]
     private $profilPicture;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(["user:profil"])]
     private $point;
 
     #[ORM\Column(type: 'float', nullable: true)]
+    #[Groups(["user:profil"])]
     private $solde;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(["user:item"])]
+    #[Groups(["user:item", "user:profil"])]
     private $bio;
 
-    #[Groups(["user:item"])]
+    #[Groups(["user:item", "user:profil"])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Article::class)]
     private $articles;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Address::class)]
+    #[Groups(["user:profil"])]
     private $addresses;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]

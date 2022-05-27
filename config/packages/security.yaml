@@ -20,19 +20,17 @@ security:
             pattern: ^/((profiler|wdt)|css|images|js)/
             security: false
 
-        login:
-            pattern: ^/api/login
+        api:
+            pattern:   ^/api
             stateless: true
+            entry_point: jwt
             json_login:
                 check_path: /api/login
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-
-
-        api:
-            pattern:   ^/api
-            stateless: true
             jwt: ~
+            refresh_jwt:
+                check_path: /api/token/refresh # or, you may use the `api_refresh_token` route name
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -43,8 +41,17 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/users, roles: ROLE_USER, methods: [PUT,PATCH,DELETE] }
+        - { path: ^/api/profil, roles: ROLE_USER, methods: [GET] }
+        - { path: ^/api/addresses, roles: ROLE_USER, methods: [POST,PUT,PATCH,DELETE] }
+        - { path: ^/api/article_categories, roles: ROLE_ADMIN, methods: [POST,PUT,PATCH,DELETE] }
+        - { path: ^/api/article_materials, roles: ROLE_ADMIN, methods: [POST,PUT,PATCH,DELETE] }
+        - { path: ^/api/article_sizes, roles: ROLE_ADMIN, methods: [POST,PUT,PATCH,DELETE] }
+        - { path: ^/api/article_states, roles: ROLE_ADMIN, methods: [POST,PUT,PATCH,DELETE] }
+        - { path: ^/api/article_types, roles: ROLE_ADMIN, methods: [POST,PUT,PATCH,DELETE] }
+        - { path: ^/api/articles, roles: ROLE_USER, methods: [POST,PUT,PATCH,DELETE] }
+        - { path: ^/api/images, roles: ROLE_USER, methods: [POST,PUT,PATCH,DELETE] }
+        - { path: ^/api/orders, roles: ROLE_USER, methods: [GET,POST,PUT,PATCH,DELETE] }
 
 when@test:
     security:

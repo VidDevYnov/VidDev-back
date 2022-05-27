@@ -31,21 +31,21 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['article:list', 'article:item', "user:item"])]
+    #[Groups(['article:list', 'article:item', "user:item", "user:profil"])]
 
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['article:list', 'article:item', 'user:item'])]
+    #[Groups(['article:list', 'article:item', 'user:item', "user:profil"])]
     private $name;
 
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['article:list', 'article:item', 'user:item'])]
+    #[Groups(['article:list', 'article:item', 'user:item', "user:profil"])]
     private $brand;
 
     #[ORM\ManyToOne(targetEntity: ArticleSize::class)]
-    #[Groups(['article:list', 'article:item', 'user:item'])]
+    #[Groups(['article:list', 'article:item', 'user:item', "user:profil"])]
     private $articleSize;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -84,7 +84,7 @@ class Article
     private $user;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
-    #[Groups(['article:list', 'article:item'])]
+    #[Groups(['article:list', 'article:item', "user:profil"])]
     private $images;
 
     public function __construct()

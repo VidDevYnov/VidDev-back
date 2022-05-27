@@ -16,7 +16,7 @@ class Image
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[Groups(['article:list', 'article:item'])]
+    #[Groups(['article:list', 'article:item', "user:profil"])]
     #[ORM\Column(type: 'string', length: 255)]
     private $path;
 

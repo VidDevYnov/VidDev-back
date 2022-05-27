@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AddressRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
 #[ApiResource]
@@ -16,18 +17,23 @@ class Address
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["user:profil"])]
     private $postalCode;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["user:profil"])]
     private $city;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["user:profil"])]
     private $country;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["user:profil"])]
     private $additionalAddress;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["user:profil"])]
     private $address;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'addresses')]
