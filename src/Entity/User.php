@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\controller\UserImageController;
 use App\controller\ProfilController;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +14,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     collectionOperations: [
@@ -35,9 +42,17 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "get" => [
             "normalization_context" => ["groups" => ['user:item']]
         ],
-        "put",
+        "put" => [
+            "normalization_context" => ["groups" => ['user:put']]
+        ],
         "patch",
-        "delete"
+        "delete",
+        "profilPicture" => [
+            'method' => 'POST',
+            'path'   => 'users/{id}/image',
+            'deserialize' => false,
+            'controller' => UserImageController::class
+        ]
     ],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -49,7 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user:item", "user:write", "user:profil"])]
+    #[Groups(["user:item", "user:write", "user:profil" , "user:put"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -60,27 +75,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write", "user:profil"])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write", "user:profil", "user:put"])]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write", "user:profil"])]
+    #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write", "user:profil", "user:put"])]
     private $lastName;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['article:list', 'article:item', "user:profil"])]
-    private $profilPicture;
-
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(["user:profil"])]
+    #[Groups(["user:profil", "user:put"])]
     private $point;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(["user:profil"])]
+    #[Groups(["user:profil", "user:put"])]
     private $solde;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(["user:item", "user:profil"])]
+    #[Groups(["user:item", "user:profil"], "user:put")]
     private $bio;
 
     #[Groups(["user:item", "user:profil"])]
@@ -94,15 +105,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private $orders;
 
-    #[Groups(["user:write"])]
+    #[Groups(["user:write", "user:put"])]
     #[SerializedName("password")]
     private $plainPassword;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['article:list', 'article:item', "user:profil"])]
+    private $imageFilePath;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $updatedAt;
+
+    /**
+     *
+     * @var File|null 
+     * @Vich\UploadableField(mapping="user_image", fileNameProperty="imageFilePath")
+     * 
+     **/
+    private $file;
 
     public function __construct()
     {
         $this->articles = new ArrayCollection();
         $this->addresses = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): ?int
@@ -217,17 +244,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getProfilPicture(): ?string
-    {
-        return $this->profilPicture;
-    }
 
-    public function setProfilPicture(?string $profilPicture): self
-    {
-        $this->profilPicture = $profilPicture;
 
-        return $this;
-    }
 
     public function getPoint(): ?int
     {
@@ -364,6 +382,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $order->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageFilePath(): ?string
+    {
+        return $this->imageFilePath;
+    }
+
+    public function setImageFilePath(?string $imageFilePath): self
+    {
+        $this->imageFilePath = $imageFilePath;
+
+        return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file): User
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

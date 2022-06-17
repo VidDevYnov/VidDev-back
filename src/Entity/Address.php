@@ -14,6 +14,7 @@ class Address
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["user:profil"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -28,16 +29,16 @@ class Address
     #[Groups(["user:profil"])]
     private $country;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["user:profil"])]
-    private $additionalAddress;
-
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(["user:profil"])]
     private $address;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'addresses')]
     private $user;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["user:profil"])]
+    private $name;
 
     public function getId(): ?int
     {
@@ -80,18 +81,6 @@ class Address
         return $this;
     }
 
-    public function getAdditionalAddress(): ?string
-    {
-        return $this->additionalAddress;
-    }
-
-    public function setAdditionalAddress(?string $additionalAddress): self
-    {
-        $this->additionalAddress = $additionalAddress;
-
-        return $this;
-    }
-
     public function getAddress(): ?string
     {
         return $this->address;
@@ -112,6 +101,18 @@ class Address
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
