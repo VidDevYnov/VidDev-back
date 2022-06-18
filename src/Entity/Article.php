@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ApiResource(
+    paginationItemsPerPage:2,
     collectionOperations: [
         "get" => [
             "normalization_context" => ['groups' => ['article:list']]
@@ -25,7 +28,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         "patch",
         "delete"
     ],
-)]
+),
+ApiFilter(SearchFilter::class, properties: ['articleCategory' => 'exact', 'articleSize' => 'exact','articleState' => 'exact', 'articleType' => 'exact', 'articleMaterial'  => 'exact' ] )]
+
 class Article
 {
     #[ORM\Id]
