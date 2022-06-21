@@ -3,12 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\controller\ArticleImageController;
 use App\Repository\ArticleRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ApiResource(
     collectionOperations: [
@@ -23,7 +29,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
         "put",
         "patch",
-        "delete"
+        "delete",
+        "articleImage" => [
+            'method' => 'POST',
+            'deserialize' => false,
+            'path'   => 'imageArticle/{id}',
+            'controller' => ArticleImageController::class
+        ]
     ],
 )]
 class Article
@@ -83,9 +95,21 @@ class Article
     #[Groups(['article:list', 'article:item'])]
     private $user;
 
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Image::class)]
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['article:list', 'article:item', "user:profil"])]
-    private $images;
+    private $imageFilePath;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $updatedAt;
+
+    /**
+     *
+     * @var File|null 
+     * @Vich\UploadableField(mapping="article_image", fileNameProperty="imageFilePath")
+     * 
+     **/
+    private $file;
 
     public function __construct()
     {
@@ -241,32 +265,38 @@ class Article
         return $this;
     }
 
-    /**
-     * @return Collection|Image[]
-     */
-    public function getImages(): Collection
+
+    public function getImageFilePath(): ?string
     {
-        return $this->images;
+        return $this->imageFilePath;
     }
 
-    public function addImage(Image $image): self
+    public function setImageFilePath(?string $imageFilePath): self
     {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->setArticle($this);
-        }
+        $this->imageFilePath = $imageFilePath;
 
         return $this;
     }
 
-    public function removeImage(Image $image): self
+    public function getFile(): ?File
     {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getArticle() === $this) {
-                $image->setArticle(null);
-            }
-        }
+        return $this->file;
+    }
+
+    public function setFile(?File $file): Article
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

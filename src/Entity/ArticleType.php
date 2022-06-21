@@ -14,6 +14,7 @@ class ArticleType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['article:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]

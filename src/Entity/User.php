@@ -49,7 +49,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         "delete",
         "profilPicture" => [
             'method' => 'POST',
-            'path'   => 'users/{id}/image',
+            'path'   => 'imageUser/{id}',
             'deserialize' => false,
             'controller' => UserImageController::class
         ]
@@ -64,7 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user:item", "user:write", "user:profil" , "user:put"])]
+    #[Groups(["user:item", "user:write", "user:profil", "user:put"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -243,8 +243,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-
 
 
     public function getPoint(): ?int
