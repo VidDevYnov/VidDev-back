@@ -49,7 +49,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         "delete",
         "profilPicture" => [
             'method' => 'POST',
-            'path'   => 'users/{id}/image',
+            'path'   => 'imageUser/{id}',
             'deserialize' => false,
             'controller' => UserImageController::class
         ]
@@ -64,7 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user:item", "user:write", "user:profil" , "user:put"])]
+    #[Groups(["user:item", "user:write", "user:profil", "user:put"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -94,12 +94,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(["user:item", "user:profil"], "user:put")]
     private $bio;
 
-    #[Groups(["user:item", "user:profil"])]
+    #[Groups(["user:item", "user:profil",])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Article::class)]
     private $articles;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Address::class)]
-    #[Groups(["user:profil"])]
+    #[Groups(["user:profil", "user:item"])]
     private $addresses;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
@@ -110,7 +110,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $plainPassword;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['article:list', 'article:item', "user:profil"])]
+    #[Groups(['article:list', 'article:item', "user:profil", "user:item"])]
     private $imageFilePath;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -243,8 +243,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-
 
 
     public function getPoint(): ?int

@@ -22,11 +22,11 @@ class Address
     private $postalCode;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:profil"])]
+    #[Groups(["user:profil", "user:item"])]
     private $city;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:profil"])]
+    #[Groups(["user:profil", "user:item"])]
     private $country;
 
     #[ORM\Column(type: 'string', length: 255)]
