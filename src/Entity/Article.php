@@ -2,8 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\controller\ArticleImageController;
+
 use App\Repository\ArticleRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,6 +21,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ApiResource(
+    paginationItemsPerPage:2,
     collectionOperations: [
         "get" => [
             "normalization_context" => ['groups' => ['article:list']]
@@ -37,7 +42,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             'controller' => ArticleImageController::class
         ]
     ],
-)]
+),
+ApiFilter(SearchFilter::class, properties: ['articleCategory' => 'exact', 'articleSize' => 'exact','articleState' => 'exact', 'articleType' => 'exact', 'articleMaterial'  => 'exact' ] )]
+
 class Article
 {
     #[ORM\Id]
