@@ -97,7 +97,7 @@ class Article
 
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['article:list', 'article:item', "user:profil"])]
+    #[Groups(['article:list', 'article:item', "user:profil", "user:item"])]
     private $imageFilePath;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
