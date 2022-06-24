@@ -14,6 +14,7 @@ class ArticleSize
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['article:item'])]
     private $id;
 
     #[Groups(['article:list', 'article:item'])]
