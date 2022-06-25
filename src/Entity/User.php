@@ -84,11 +84,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'integer')]
     #[Groups(["user:profil", "user:put", 'article:item'])]
-    private $point;
+    private $point = 0;
 
     #[ORM\Column(type: 'float')]
     #[Groups(["user:profil", "user:put", 'article:item'])]
-    private $solde;
+    private $solde = 0;
 
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(["user:item", "user:profil"], "user:put")]
