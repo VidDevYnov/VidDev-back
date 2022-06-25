@@ -20,30 +20,32 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable
  */
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
-#[ApiResource(
-    paginationItemsPerPage:2,
-    collectionOperations: [
-        "get" => [
-            "normalization_context" => ['groups' => ['article:list']]
+#[
+    ApiResource(
+        paginationItemsPerPage: 50,
+        collectionOperations: [
+            "get" => [
+                "normalization_context" => ['groups' => ['article:list']]
+            ],
+            "post"
         ],
-        "post"
-    ],
-    itemOperations: [
-        "get" => [
-            "normalization_context" => ["groups" => ['article:item']]
+        itemOperations: [
+            "get" => [
+                "normalization_context" => ["groups" => ['article:item']]
+            ],
+            "put",
+            "patch",
+            "delete",
+            "articleImage" => [
+                'method' => 'POST',
+                'deserialize' => false,
+                'path'   => 'imageArticle/{id}',
+                'controller' => ArticleImageController::class
+            ]
         ],
-        "put",
-        "patch",
-        "delete",
-        "articleImage" => [
-            'method' => 'POST',
-            'deserialize' => false,
-            'path'   => 'imageArticle/{id}',
-            'controller' => ArticleImageController::class
-        ]
-    ],
-),
-ApiFilter(SearchFilter::class, properties: ['articleCategory' => 'exact', 'articleSize' => 'exact','articleState' => 'exact', 'articleType' => 'exact', 'articleMaterial'  => 'exact' ] )]
+    ),
+    ApiFilter(SearchFilter::class, properties: ['articleCategory' => 'exact', 'articleSize' => 'exact', 'articleState' => 'exact', 'articleType' => 'exact', 'articleMaterial'  => 'exact'])
+]
 
 class Article
 {
