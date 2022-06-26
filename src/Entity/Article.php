@@ -4,10 +4,9 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 use App\controller\ArticleImageController;
-
 use App\Repository\ArticleRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -44,7 +43,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ]
         ],
     ),
-    ApiFilter(SearchFilter::class, properties: ['articleCategory' => 'exact', 'articleSize' => 'exact', 'articleState' => 'exact', 'articleType' => 'exact', 'articleMaterial'  => 'exact'])
+    ApiFilter(SearchFilter::class, properties: ['user' => 'exact', 'articleCategory' => 'exact', 'articleSize' => 'exact', 'articleState' => 'exact', 'articleType' => 'exact', 'articleMaterial'  => 'exact', "orderArticle"]),
+    ApiFilter(ExistsFilter::class, properties: ["orderArticle"])
+
 ]
 
 class Article
@@ -52,21 +53,21 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['article:list', 'article:item', "user:item", "user:profil"])]
+    #[Groups(['article:list', 'article:item', "user:profil"])]
 
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['article:list', 'article:item', 'user:item', "user:profil"])]
+    #[Groups(['article:list', 'article:item'])]
     private $name;
 
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['article:list', 'article:item', 'user:item', "user:profil"])]
+    #[Groups(['article:list', 'article:item'])]
     private $brand;
 
     #[ORM\ManyToOne(targetEntity: ArticleSize::class)]
-    #[Groups(['article:list', 'article:item', 'user:item', "user:profil"])]
+    #[Groups(['article:list', 'article:item'])]
     private $articleSize;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -74,7 +75,7 @@ class Article
     private $description;
 
     #[ORM\Column(type: 'float')]
-    #[Groups(['article:list', 'article:item', 'user:item'])]
+    #[Groups(['article:list', 'article:item'])]
     private $price;
 
     #[ORM\ManyToOne(targetEntity: ArticleState::class)]
@@ -97,6 +98,7 @@ class Article
     #[Groups(['article:item'])]
     private $articleCategory;
 
+    #[Groups(['user:item'])]
     #[ORM\ManyToOne(targetEntity: Order::class)]
     private $orderArticle;
 
@@ -106,7 +108,7 @@ class Article
 
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['article:list', 'article:item', "user:profil", "user:item"])]
+    #[Groups(['article:list', 'article:item'])]
     private $imageFilePath;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
