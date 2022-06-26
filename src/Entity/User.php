@@ -67,7 +67,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user:item", "user:write", "user:profil", "user:put"])]
+    #[Groups(["user:item", "user:write", "user:profil", "user:put", "article:item"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
