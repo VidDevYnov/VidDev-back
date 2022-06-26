@@ -1,0 +1,27 @@
+{% block body %}
+	<h1 style="text-align: center;">Récapitulatif de votre commande</h1>
+
+	<div style="text-align: center;">
+		Bonjour
+		{{user.firstName}}
+		{{user.lastName}}
+		voici votre commande
+	</div>
+	<p>
+		Nom de l'article :
+		{{article.name}}
+	</p>
+	<p>
+		Total :
+		{{order.price}}
+		€</p>
+
+
+	<p>
+		Point obtenue :
+		{{order.point}}
+
+	</p>
+
+
+</div>{% endblock %}

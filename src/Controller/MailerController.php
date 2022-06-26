@@ -5,24 +5,63 @@ namespace App\controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 
 class MailerController extends AbstractController
 {
-    #[Route('/email')]
-    public function sendEmail(MailerInterface $mailer, Request $request): Response
+    #[Route('/emailBuyeur')]
+    public function sendEmailBuyeur(MailerInterface $mailer, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        $email = (new Email())
+        $email = (new TemplatedEmail())
+
             ->from('johanna.dezarnaud@orange.fr')
-            ->to($data['email'])
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for ' . $data['email'] . ' HTML integration!</p>');
+            ->to($data['user']['email'])
+            ->subject('Votre commande VID\'Dev')
+            ->htmlTemplate('mail/buyeur.html.twig')
+            ->context([
+                'order' => $data['order'],
+                'user' => $data['user'],
+                'article' => $data['article'],
+
+            ]);
+
+        $mailer->send($email);
+
+
+
+        $mailer->send($email);
+
+        return new Response(
+            Response::HTTP_OK
+        );;
+    }
+
+
+    #[Route('/emailSeller')]
+    public function sendEmailSeller(MailerInterface $mailer, Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $email = (new TemplatedEmail())
+
+            ->from('johanna.dezarnaud@orange.fr')
+            ->to($data['user']['email'])
+            ->subject('Un de vos articles vendu sur VID\'Dev')
+            ->htmlTemplate('mail/seller.html.twig')
+            ->context([
+                'user' => $data['user'],
+                'article' => $data['article'],
+                'buyeur' => $data['buyeur'],
+            ]);
+
+        $mailer->send($email);
+
+
 
         $mailer->send($email);
 
