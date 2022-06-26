@@ -21,40 +21,43 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(
-    collectionOperations: [
-        "get" => [
-            "normalization_context" => ['groups' => ['user:list']]
-        ],
-        "post" => [
-            "denormalization_context" => ['groups' => ['user:write']]
-        ],
-        "profil" => [
-            'pagination_enabled' => false,
-            'method' => 'GET',
-            'path' => '/profil',
-            'controller' => ProfilController::class,
-            "normalization_context" => ['groups' => ['user:profil']]
+#[
+    ApiResource(
+        collectionOperations: [
+            "get" => [
+                "normalization_context" => ['groups' => ['user:list']]
+            ],
+            "post" => [
+                "denormalization_context" => ['groups' => ['user:write']]
+            ],
+            "profil" => [
+                'pagination_enabled' => false,
+                'method' => 'GET',
+                'path' => '/profil',
+                'controller' => ProfilController::class,
+                "normalization_context" => ['groups' => ['user:profil']]
 
+            ],
         ],
-    ],
-    itemOperations: [
-        "get" => [
-            "normalization_context" => ["groups" => ['user:item']]
+        itemOperations: [
+            "get" => [
+                "normalization_context" => ["groups" => ['user:item']]
+            ],
+            "put" => [
+                "normalization_context" => ["groups" => ['user:put']]
+            ],
+            "patch",
+            "delete",
+            "profilPicture" => [
+                'method' => 'POST',
+                'path'   => 'imageUser/{id}',
+                'deserialize' => false,
+                'controller' => UserImageController::class
+            ]
         ],
-        "put" => [
-            "normalization_context" => ["groups" => ['user:put']]
-        ],
-        "patch",
-        "delete",
-        "profilPicture" => [
-            'method' => 'POST',
-            'path'   => 'imageUser/{id}',
-            'deserialize' => false,
-            'controller' => UserImageController::class
-        ]
-    ],
-)]
+
+    ),
+]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -82,19 +85,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(["user:list", "user:item", 'article:list', 'article:item', "user:write", "user:profil", "user:put"])]
     private $lastName;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(["user:profil", "user:put"])]
-    private $point;
+    #[ORM\Column(type: 'integer')]
+    #[Groups(["user:profil", "user:put", 'article:item'])]
+    private $point = 0;
 
-    #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(["user:profil", "user:put"])]
-    private $solde;
+    #[ORM\Column(type: 'float')]
+    #[Groups(["user:profil", "user:put", 'article:item'])]
+    private $solde = 0;
 
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(["user:item", "user:profil"], "user:put")]
     private $bio;
 
-    #[Groups(["user:item", "user:profil",])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Article::class)]
     private $articles;
 
