@@ -53,6 +53,9 @@ security:
         - { path: ^/api/orders, roles: ROLE_USER, methods: [GET,POST,PUT,PATCH,DELETE] }
         - { path: ^/api/imageUser, roles: ROLE_USER, methods: [POST] }
         - { path: ^/api/imageArticle, roles: ROLE_USER, methods: [POST] }
+        - { path: ^/api/notifications, roles: ROLE_USER, methods: [GET,POST,PUT,PATCH,DELETE] }
+
+        
 
 
 when@test:
