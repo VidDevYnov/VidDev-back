@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\controller;
+namespace App\Controller;
 
 use App\Entity\Article;
 use RuntimeException;

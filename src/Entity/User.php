@@ -4,8 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\controller\UserImageController;
-use App\controller\ProfilController;
+use App\Controller\UserImageController;
+use App\Controller\ProfilController;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -71,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(["user:write"])]
+    #[Groups(["user:write",  'user:profil'])]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
