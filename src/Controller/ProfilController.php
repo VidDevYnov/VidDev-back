@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\controller;
+namespace App\Controller;
 
 use Symfony\Component\Security\Core\Security;
 
