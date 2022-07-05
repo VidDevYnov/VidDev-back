@@ -26,11 +26,11 @@ class Order
     private $point;
 
     #[ORM\ManyToOne(targetEntity: Address::class)]
-    #[ORM\JoinColumn(name: "address", onDelete: "NO ACTION")]
+    #[ORM\JoinColumn(name: "address", onDelete: "SET NULL")]
     private $address;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
-    #[ORM\JoinColumn(name: "user", onDelete: "NO ACTION")]
+    #[ORM\JoinColumn(name: "user", onDelete: "SET NULL")]
     private $user;
 
 

@@ -21,7 +21,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[
     ApiResource(
-        paginationItemsPerPage: 50,
+        paginationItemsPerPage: 1,
         collectionOperations: [
             "get" => [
                 "normalization_context" => ['groups' => ['article:list']]
@@ -98,7 +98,7 @@ class Article
     #[Groups(['article:item'])]
     private $articleCategory;
 
-    #[Groups(['user:item'])]
+    #[Groups(['user:item', 'article:item'])]
     #[ORM\ManyToOne(targetEntity: Order::class)]
     private $orderArticle;
 
