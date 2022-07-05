@@ -21,7 +21,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[
     ApiResource(
-        paginationItemsPerPage: 1,
+        paginationItemsPerPage: 50,
         collectionOperations: [
             "get" => [
                 "normalization_context" => ['groups' => ['article:list']]
