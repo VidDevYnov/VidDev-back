@@ -16,7 +16,7 @@ php bin/console doctrine:database:create
 php bin/console make:migration
 php bin/console doctrine:migrations:migrate
 
-# Generation ok SSH keys:
+# Generation of SSH keys:
 php bin/console lexik:jwt:generate-keypair
 
 # Start server: 
